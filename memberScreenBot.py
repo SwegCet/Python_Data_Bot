@@ -2,29 +2,13 @@ import pyautogui
 import time
 import os
 import pytesseract
+import cv2
+import numpy as np
 from PIL import Image
 
 pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
-#mouseInfo = pyautogui.mouseInfo()
-
-#simulate rank 1 click info, starting from the MEMBER RANK PAGE
-#THIS IS JUST TO TEST IF IT WORKS, IT DOES 
-'''
-time.sleep(2)
-pyautogui.click(753, 531, 1)
-pyautogui.moveTo(604, 653, 1)
-pyautogui.click()
-pyautogui.moveTo(886, 849, 1)
-pyautogui.click(interval=1)
-pyautogui.screenshot("testkillstats.png")
-pyautogui.mouseDown(1104, 827, button="left")
-pyautogui.moveTo(1104, 444, 1)
-pyautogui.mouseUp()
-pyautogui.screenshot("testrssstats.png")
-pyautogui.click(x=47, y=77, interval= 1, button="left")
-pyautogui.click(x=47, y=77, interval= 1, button="left")
-'''
+mouseInfo = pyautogui.mouseInfo()
 
 #SIMPLIFYING THE CODE W FUNCTIONS
 def click(x, y, duration=1, interval=0.5, button="left"):
@@ -90,40 +74,17 @@ def tesseractRead():
                 print(f"OCR processed for: {file_name}")
 
 
+#simulate leader from the alliance members
 '''
-idRegion= 320, 450, 190, 50
-cardRegion= 100, 275, 1690, 765
-time.sleep(0.5)
-click(750, 530) #Clicks player Icon
-click(600, 650) #Clicks Info
-#take_screenshot("playerCard.png", idRegion) #SS player Card
-click(885, 850) #Clicks more Info
-#take_screenshot("killStats.png", cardRegion) #SS kills
-time.sleep(0.5)
-click(47, 77) #Back arrow
-click(47,77) #Back arrow
-moveTo(750,530)
-#tesseractRead() #Read from the 2 images
+time.sleep(2)
+click(830, 380)
+click(770, 490)
+take_screenshot("info.png")
+click(880, 850)
+take_screenshot("moreInfo.png")
+click(40,80)
+click(40,80)
 '''
-
-'''
-#Move to 2-4
-click(750, 640) #2nd rank player
-click(610, 750) #2nd rank info
-click(885, 850) #2nd rank more info
-click(47,77)
-click(47,77)
-moveTo(750,640)
-
-click(750, 750) #3rd rank player
-click(610, 420) #3rd rank info
-'''
-
-#Test Drag 5-8
-drag(1215, 850, 1215, 410) #this works till the the account rank is higher than where it starts
-    
-    
-
 
 # Need to figure out how to 1-4, scroll and repeat all the way till 200th member
 
