@@ -100,21 +100,12 @@ def readNumber(image, bounds):
 def readGrayNumber(image, bounds):
     #Crop the image based on bounding box coords
     croppedImage = image[bounds.y:bounds.y + bounds.height, bounds.x:bounds.x + bounds.width]
-
-    #Convert image to grayscale
-    grayImage = cv2.cvtColor(croppedImage, cv2.COLOR_BGR2GRAY)
-    
-    #Apply Gaussian Filtering to reduce noise
-    blurredImage = cv2.GaussianBlur(grayImage, (5, 5), 0)
-    
-    #Apply adaptive thresholding to blurred image
-    threshold_image = cv2.adaptiveThreshold(blurredImage, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 11, 2)
     
     #Configuring OCR
     customConfig = r'--oem 3 --psm 8 outputbase digits'
     
     #Perform OCR on threshold image
-    numbers = pytesseract.image_to_string(threshold_image, config = customConfig)
+    numbers = pytesseract.image_to_string(croppedImage, config = customConfig)
     
     #Clean the OCR result to extract the number
     cleanedNumbers = ''.join(filter(lambda x: x.isdigit() or x == ',', numbers))
