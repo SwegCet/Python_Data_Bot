@@ -1,7 +1,6 @@
 import pyautogui
 import time
 
-
 def moveTo(location, duration=0.1):
     pyautogui.moveTo(location.x, location.y, duration)
     time.sleep(.1)

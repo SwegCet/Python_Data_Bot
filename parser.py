@@ -7,7 +7,7 @@ import logging
 
 from matplotlib import pyplot as plt
 
-from config import tesseract_cmd, detailed_profile_screenshot_boundary as ss_detail_bounds, detailed_profile_screenshot_bound as ss_bounds
+from config import tesseract_cmd, detailed_profile_screenshot_bound as ss_detail_bounds, player_screenshot_bound as ss_bounds
 from objects import PlayersStats
 
 
@@ -105,28 +105,21 @@ def readGrayNumber(image, bounds):
     grayImage = cv2.cvtColor(croppedImage, cv2.COLOR_BGR2GRAY)
     
     #Apply Gaussian Filtering to reduce noise
-    blurredImage = cv2.GaussianBlur(grayImage, (5,5), 0)
+    blurredImage = cv2.GaussianBlur(grayImage, (5, 5), 0)
     
     #Apply adaptive thresholding to blurred image
-    threshold_image = cv2.adaptiveThreshold(blurredImage, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY,11, 2)
+    threshold_image = cv2.adaptiveThreshold(blurredImage, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 11, 2)
     
     #Configuring OCR
-    customConfig = r'--oem 3 --psm 8'
+    customConfig = r'--oem 3 --psm 8 outputbase digits'
     
     #Perform OCR on threshold image
     numbers = pytesseract.image_to_string(threshold_image, config = customConfig)
     
     #Clean the OCR result to extract the number
     cleanedNumbers = ''.join(filter(lambda x: x.isdigit() or x == ',', numbers))
-
-    #Formatting the number with commas
-    try:
-        extractedNumber = int(cleanedNumbers.replace(',', ''))
-    except ValueError:
-        extractedNumber = -1
-        logging.error("OCR result doesn't contain valid number")
     
-    return extractedNumber
+    return cleanedNumbers
 
 #Read player with bounds from config.py
 def readText(image, bounds):
@@ -141,7 +134,7 @@ def readText(image, bounds):
         dilatedImage = cv2.dilate(grayImage, kernel, iterations=1)
         erodedImage = cv2.erode(dilatedImage, kernel, iterations=1)
         
-        customConfig = r'--oem 3 --psm 6 -1 eng'
+        customConfig = r'--oem 3 --psm 6 -l eng'
         text = pytesseract.image_to_string(erodedImage, config=customConfig)
         
         #Delete new line characters

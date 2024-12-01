@@ -9,7 +9,7 @@ import uuid
 
 from skimage.metrics import structural_similarity as ssim
 from objects import Point
-from mouse import drag, moveClickTarget, click
+from mouse import drag, moveClickTarget
 from config import member_screen_coordinates
 
 #mouseInfo = pyautogui.mouseInfo()
@@ -19,14 +19,15 @@ def getLeaderScreenshot(directory_path):
     
     #open and close caching
     cell_position = member_screen_coordinates["leader_location"]
-    click(cell_position)
-    findImageClick("./rss/imfoButton.png")
+    moveClickTarget(cell_position)
+    findImageClick("./rss/infoButton.png")
     time.sleep(1)
     
     saveProfile(new_path)
     
     moveClickTarget(member_screen_coordinates["more_info_location"])
-    time.sleep(1)
+    time.sleep(1.5)
+    saveDetailedProfile(new_path)
     moveClickTarget(member_screen_coordinates["back_button_location"])
     moveClickTarget(member_screen_coordinates["back_button_location"])
 
@@ -47,7 +48,7 @@ def processRanks(directory_path):
             
             drag(
                 Point(member_screen_coordinates["start_cell"].x, member_screen_coordinates["start_cell"].y), 
-                Point(member_screen_coordinates["start_cell"].x, member_screen_coordinates["start_cell"].y)
+                Point(member_screen_coordinates["start_cell"].x, member_screen_coordinates["start_cell"].y) #add -400 here when done with testing
                 )
             time.sleep(0.5)
             
@@ -66,17 +67,17 @@ def circlesInArea():
     roiHeight = member_screen_coordinates["circle_search_area"]["h"]
     
     #Defining the radius for circle detection
-    min_Radius = member_screen_coordinates["circle_properities"]["min_radius"]
-    max_Radius = member_screen_coordinates["circle_properities"]["max_radius"]
+    min_Radius = member_screen_coordinates["circle_properties"]["min_radius"]
+    max_Radius = member_screen_coordinates["circle_properties"]["max_radius"]
     roiX = member_screen_coordinates["circle_search_area"]["x"]
     roiY = member_screen_coordinates["circle_search_area"]["y"]
     
     #capture a screenshot of the bluestack screen within ROI
     bluestack_screenshot = pyautogui.screenshot(region=(roiX,roiY, roiWidth,roiHeight))
-    bluestack_screenshot.save('bluestacks_roi.png')
+    bluestack_screenshot.save('bluestack_roi.png')
     
     #load bluestack image within ROI
-    bluestack_image = cv2.imread('bluesatck_roi.png', cv2.IMREAD_GRAYSCALE)
+    bluestack_image = cv2.imread('bluestack_roi.png', cv2.IMREAD_GRAYSCALE)
     bluestack_image = cv2.medianBlur(bluestack_image, 5) # Applying median blur for noise reduction
     
     #Perform Hough Circle Transform for circle detection within the ROI
@@ -87,7 +88,7 @@ def circlesInArea():
 def getMemberScreenshots(circles, directory_path):
     roiX = member_screen_coordinates["circle_search_area"]["x"]
     roiY = member_screen_coordinates["circle_search_area"]["y"]
-    circles = np.uint16(np.aroudn(circles))
+    circles = np.uint16(np.around(circles))
     
     #move the mouse to the center of each detected circle in the ROI
     for circle in circles[0, :]:
@@ -96,7 +97,7 @@ def getMemberScreenshots(circles, directory_path):
         center = (circle[0] + roiX, circle[1] + roiY) 
         moveClickTarget(Point(center[0], center[1]), .1)
         
-        if not findImageClick("./rss.info.png"):
+        if not findImageClick("./rss/infoButton.png"):
             continue
         time.sleep(1)
         
@@ -104,7 +105,7 @@ def getMemberScreenshots(circles, directory_path):
         
         #click more info
         moveClickTarget(member_screen_coordinates["more_info_location"])
-        time.sleep(1)
+        time.sleep(1.5)
         saveDetailedProfile(new_path)
         moveClickTarget(member_screen_coordinates["back_button_location"])
         moveClickTarget(member_screen_coordinates["back_button_location"])
@@ -113,10 +114,10 @@ def findImageClick(reference_image_path, should_click=True, retry_count = 3, thr
     for i in range(0, retry_count):
         #screenshot and save image
         bluestacks_screenshot = pyautogui.screenshot()
-        bluestacks_screenshot.save('bluestacks_roi.png')
+        bluestacks_screenshot.save('bluestack_roi.png')
         
         #load up the screenshot
-        screenshot = cv2.imread('bluestacks_roi.png')
+        screenshot = cv2.imread('bluestack_roi.png')
         
         #load up reference image
         template = cv2.imread(reference_image_path)
@@ -173,7 +174,7 @@ def areScreenshotsSame(beforepath, afterpath):
     grayAfter = cv2.cvtColor(imageAfter, cv2.COLOR_BGR2GRAY)
     
     #Calculate SSI between the 2 images
-    ssiScore = ssim(grayBefore, grayAfter, full = True)
+    ssiScore, _ = ssim(grayBefore, grayAfter, full = True)
     
     #Compare SSI score to determine if images are same
     threshold = 0.95
@@ -188,10 +189,10 @@ def findDownArrowClick():
     
     #capture screenshot
     bluestackSS = pyautogui.screenshot()
-    bluestackSS.save('bluestackROI.png')
+    bluestackSS.save('bluestack_roi.png')
     
     #load screenshot
-    screenshot = cv2.imread('bluestackROI.png')
+    screenshot = cv2.imread('bluestack_roi.png')
     
     #load reference image
     template = cv2.imread(referenceImage)
