@@ -12,6 +12,7 @@ from objects import Point
 from mouse import drag, moveClickTarget
 from config import member_screen_coordinates
 
+#UNCOMMENT TO FIND FIGURE OUT COORDINATES
 #mouseInfo = pyautogui.mouseInfo()
 
 def getLeaderScreenshot(directory_path):
@@ -60,7 +61,7 @@ def processRanks(directory_path):
                 break
             deleteSS('ssBefore.png')
             deleteSS('ssAfter.png')
-            deleteSS('bluestack_roi.png')
+            deleteSS('bluestackRoi.png')
 
 def circlesInArea():
     roiWidth = member_screen_coordinates["circle_search_area"]["w"]
@@ -74,10 +75,10 @@ def circlesInArea():
     
     #capture a screenshot of the bluestack screen within ROI
     bluestack_screenshot = pyautogui.screenshot(region=(roiX,roiY, roiWidth,roiHeight))
-    bluestack_screenshot.save('bluestack_roi.png')
+    bluestack_screenshot.save('bluestackRoi.png')
     
     #load bluestack image within ROI
-    bluestack_image = cv2.imread('bluestack_roi.png', cv2.IMREAD_GRAYSCALE)
+    bluestack_image = cv2.imread('bluestackRoi.png', cv2.IMREAD_GRAYSCALE)
     bluestack_image = cv2.medianBlur(bluestack_image, 5) # Applying median blur for noise reduction
     
     #Perform Hough Circle Transform for circle detection within the ROI
@@ -114,10 +115,10 @@ def findImageClick(reference_image_path, should_click=True, retry_count = 3, thr
     for i in range(0, retry_count):
         #screenshot and save image
         bluestacks_screenshot = pyautogui.screenshot()
-        bluestacks_screenshot.save('bluestack_roi.png')
+        bluestacks_screenshot.save('bluestackRoi.png')
         
         #load up the screenshot
-        screenshot = cv2.imread('bluestack_roi.png')
+        screenshot = cv2.imread('bluestackRoi.png')
         
         #load up reference image
         template = cv2.imread(reference_image_path)
@@ -189,10 +190,10 @@ def findDownArrowClick():
     
     #capture screenshot
     bluestackSS = pyautogui.screenshot()
-    bluestackSS.save('bluestack_roi.png')
+    bluestackSS.save('bluestackRoi.png')
     
     #load screenshot
-    screenshot = cv2.imread('bluestack_roi.png')
+    screenshot = cv2.imread('bluestackRoi.png')
     
     #load reference image
     template = cv2.imread(referenceImage)
@@ -200,7 +201,7 @@ def findDownArrowClick():
     #perform template matching
     result = cv2.matchTemplate(screenshot, template, cv2.TM_CCOEFF_NORMED)
     
-    #set threshold for the match value to filter out less accurate amtches
+    #set threshold for the match value to filter out less accurate matches
     loc = np.where(result >= threshold)
     for pt in zip(*loc[::-1]):
         #get coordinates of top left corner of best match
