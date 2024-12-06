@@ -64,12 +64,12 @@ def main():
     destination_directory_names = []
     
     # Don't like the predetermined values, this is a test so far
-    directoryName = f"outputs/ECHO_{timestampString}"
+    directoryName = f"outputs/ECHO_{timestampString}" # CHANGE ALLIANCE NAME HERE
     os.makedirs(directoryName)
-    print("Processing alliance ECHO")
+    print("Processing alliance ECHO") # CHANGE ALLIANCE NAME HERE
     processRanks(directoryName)
     # ----------------------------- GetScreenshots -----------------------------
-    print("Processing alliance ECHO finished. Parsing screenshots")
+    print("Processing alliance ECHO finished. Parsing screenshots") # CHANGE ALLIANCE NAME HERE
    
     # ----------------------------- Parse Screenshots -----------------------------
     result_path = os.path.join(directoryName)
