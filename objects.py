@@ -22,5 +22,5 @@ class PlayersStats:
         self.victories = victories
         self.defeats = defeats
         self.unitsKilled = unitsKilled
-        self.unitsKilled = unitsDead
+        self.unitsDead = unitsDead
         self.unitsHealed = unitsHealed
