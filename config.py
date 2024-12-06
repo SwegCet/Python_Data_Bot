@@ -1,6 +1,13 @@
 from objects import Point, ImageBounds
 
+# CHANGE ALL COORDINATES FITTING WITH YOUR COORDINATES ON SCREEN
+# TO GET COORDINATES, USE pyautogui.mouseInfo() IN memberScreenBot.py and RUN IT in that file
+
 #Set boundaries for player stats and name, Highlights the NUMBERS for stats and NAME for player ONLY
+#Format for coordiante is: ImageBounds(Point(X,Y), Xoffset, Yoffset) <- THIS CREATES A RECTANGLE "BOX" 
+#Higher values of X offset = move right
+#Higher values of Y offset = move down
+
 detailed_profile_screenshot_bound = {
     "name": ImageBounds(Point(190, 690), 280, 50),
     "current_power": ImageBounds(Point(210, 805),250, 50),
