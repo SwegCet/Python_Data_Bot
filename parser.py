@@ -16,10 +16,10 @@ logging.basicConfig(level=logging.INFO, format = '%(asctime)s - %(levelname)s - 
 threshold = 0.8
 
 def collectPlayerStats(detailedProfilePath, profileSummaryPath):
-    name, currentPower, merits, victories, defeats, highestPower, kills, dead, healed = getPlayerDetails(detailedProfilePath)
+    playerName, currentPower, merits, victories, defeats, highestPower, kills, dead, healed = getPlayerDetails(detailedProfilePath)
     playerId = getPlayerSummary(profileSummaryPath)
     
-    return PlayersStats(playerId, name, currentPower, merits, victories, defeats,  highestPower, kills, dead, healed)
+    return PlayersStats(playerId, playerName, currentPower, merits, victories, defeats,  highestPower, kills, dead, healed)
 
 #Most likely useless
 def stringSimilarity(string1, string2):
@@ -101,11 +101,24 @@ def readGrayNumber(image, bounds):
     #Crop the image based on bounding box coords
     croppedImage = image[bounds.y:bounds.y + bounds.height, bounds.x:bounds.x + bounds.width]
     
+    # -------------------------ONLY UNCOMMENT IF PARSING ID ISNT CORRECT (delete ''')-------------------------
+    '''
+    #Add grayscale to the cropped image
+    grayImage = cv2.cvtColor(croppedImage, cv2.COLOR_BGR2GRAY)
+    
+    #Apply Guassian Filter to reduce noise on grayscaled image
+    blurredImage = cv2.GaussianBlur(grayImage, (5,5 ), 0)
+    
+    #Apply Adaptive thresholding to the blurred image
+    thresholdImage = cv2.adaptiveThreshold(blurredImage, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 11, 2)
+    
+    '''
+    
     #Configuring OCR
     customConfig = r'--oem 3 --psm 8 outputbase digits'
     
     #Perform OCR on threshold image
-    numbers = pytesseract.image_to_string(croppedImage, config = customConfig)
+    numbers = pytesseract.image_to_string(croppedImage, config = customConfig) #Changed croppedImage to thresholdImage if you uncommented above
     
     #Clean the OCR result to extract the number
     cleanedNumbers = ''.join(filter(lambda x: x.isdigit() or x == ',', numbers))
