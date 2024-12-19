@@ -16,10 +16,10 @@ logging.basicConfig(level=logging.INFO, format = '%(asctime)s - %(levelname)s - 
 threshold = 0.8
 
 def collectPlayerStats(detailedProfilePath, profileSummaryPath):
-    playerName, currentPower, merits, victories, defeats, highestPower, kills, dead, healed = getPlayerDetails(detailedProfilePath)
+    playerName, currentPower, highestPower, merits, victories, defeats, kills, dead, healed = getPlayerDetails(detailedProfilePath)
     playerId = getPlayerSummary(profileSummaryPath)
     
-    return PlayersStats(playerId, playerName, currentPower, merits, victories, defeats,  highestPower, kills, dead, healed)
+    return PlayersStats(playerId, playerName, highestPower, currentPower, merits, victories, defeats, kills, dead, healed)
 
 #Most likely useless
 def stringSimilarity(string1, string2):
@@ -51,7 +51,7 @@ def getPlayerDetails(path):
     logging.info(f"Dead: {dead}")
     logging.info(f"Healed: {healed}")
     
-    return name, currentPower, merits, victories, defeats ,highestPower, kills, dead, healed
+    return name, currentPower, highestPower, merits, victories, defeats , kills, dead, healed
 
 #Gets player Id from Info page
 def getPlayerSummary(path):
@@ -139,7 +139,7 @@ def readText(image, bounds):
         erodedImage = cv2.erode(dilatedImage, kernel, iterations=1)
         
         customConfig = r'--oem 3 --psm 6 -l eng'
-        text = pytesseract.image_to_string(erodedImage, config=customConfig)
+        text = pytesseract.image_to_string(grayImage, config=customConfig)
         
         #Delete new line characters
         text = text.replace('\n', ' ')
