@@ -3,7 +3,7 @@ import os
 import shutil
 import time
 from datetime import datetime
-import tkinter as tk
+import tkinter as tk #remove
 import pytz
 
 from parser import collectPlayerStats
@@ -99,7 +99,7 @@ def main():
     # ----------------------------- Clear Directories -----------------------------
     
     moveClickTarget(member_screen_coordinates["back_button_location"])
-    moveClickTarget(member_screen_coordinates["back_button_location"])
+    moveClickTarget(member_screen_coordinates["back_button_location"]) # Possibly Remove
     time.sleep(1)
 
     # Here is where putting files into googledrive will be 
