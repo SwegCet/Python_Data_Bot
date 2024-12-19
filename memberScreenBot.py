@@ -27,7 +27,7 @@ def getLeaderScreenshot(directory_path):
     saveProfile(new_path)
     
     moveClickTarget(member_screen_coordinates["more_info_location"])
-    time.sleep(1.5)
+    time.sleep(2)
     saveDetailedProfile(new_path)
     moveClickTarget(member_screen_coordinates["back_button_location"])
     moveClickTarget(member_screen_coordinates["back_button_location"])
@@ -49,10 +49,11 @@ def processRanks(directory_path):
             
             drag(
                 Point(member_screen_coordinates["start_cell"].x, member_screen_coordinates["start_cell"].y), 
-                Point(member_screen_coordinates["start_cell"].x, member_screen_coordinates["start_cell"].y) #add -400 here when done with testing
+                Point(member_screen_coordinates["start_cell"].x, member_screen_coordinates["start_cell"].y - 380), 0.5 #add -400 here when done with testing
                 )
             time.sleep(0.5)
             
+            #take a screenshot after dragging
             ssAfter = pyautogui.screenshot()
             ssAfter.save('ssAfter.png')
             
@@ -179,7 +180,8 @@ def areScreenshotsSame(beforepath, afterpath):
     ssiScore, _ = ssim(grayBefore, grayAfter, full = True)
     
     #Compare SSI score to determine if images are same
-    threshold = 0.95
+    threshold = 0.92
+    print(f"The SSI score was: {ssiScore}")
     if ssiScore > threshold:
         return True
     else:
