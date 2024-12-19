@@ -135,8 +135,8 @@ def readText(image, bounds):
         
         #Apply morphological operations to separate characters
         kernel = np.ones((2,2), np.uint8)
-        dilatedImage = cv2.dilate(grayImage, kernel, iterations=1)
-        erodedImage = cv2.erode(dilatedImage, kernel, iterations=1)
+        dilatedImage = cv2.dilate(grayImage, kernel, iterations=1) #Possibly Remove
+        erodedImage = cv2.erode(dilatedImage, kernel, iterations=1) #Possibly Remove
         
         customConfig = r'--oem 3 --psm 6 -l eng'
         text = pytesseract.image_to_string(grayImage, config=customConfig)
