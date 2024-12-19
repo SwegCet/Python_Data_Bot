@@ -4,7 +4,6 @@ import shutil
 import time
 from datetime import datetime
 import tkinter as tk
-import uuid
 import pytz
 
 from parser import collectPlayerStats
@@ -12,6 +11,10 @@ from excel import savePlayerStats
 from memberScreenBot import processRanks
 from mouse import moveClickTarget
 from config import member_screen_coordinates
+from googledrive import uploadFile, createFolder
+from zip import zipFolder
+
+parentFolderId = "1ty4CfIdRfnTw9fFuOPdpFTOz4DNZIRBN"
 
 def parseScreenshots(directoryName, destinationDirectoryName):
     results = {}
@@ -41,6 +44,9 @@ def parseScreenshots(directoryName, destinationDirectoryName):
         
         print(f"Skipped {skipCount} players")
         print(f"Total unique players: {len(results)}")
+        zipFolder(os.path.join(destinationDirectoryName, "ss"), os.path.join(destinationDirectoryName,"ss.zip"))
+        #recursively remove the directory and its contents
+        shutil.rmtree(os.path.join(destinationDirectoryName, "ss"))
         return results, destinationDirectoryName.replace("outputs/", "")
         
                                
@@ -97,7 +103,16 @@ def main():
     time.sleep(1)
 
     # Here is where putting files into googledrive will be 
-
+    for directoryName in destination_directory_names:
+        upload_count = 1
+        #Traverse the main directory
+        for root, dirs, files in os.walk(os.path.join("outputs/", directoryName)):
+            folderId = createFolder(parentFolderId, directoryName)
+            for file in files:
+                file_path = os.path.join("outputs/", directoryName, file)
+                uploadFile(folderId, file_path, os.path.basename(file_path))
+                logging.info(f"Uploaded {file_path}, Count: {upload_count}")
+                upload_count += 1
 
 if __name__ == "__main__":
     main()
