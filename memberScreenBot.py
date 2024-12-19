@@ -59,9 +59,10 @@ def processRanks(directory_path):
             isSame = areScreenshotsSame('ssBefore.png','ssAfter.png')
             if isSame: 
                 break
-            deleteSS('ssBefore.png')
-            deleteSS('ssAfter.png')
-            deleteSS('bluestackRoi.png')
+            
+    deleteSS('ssBefore.png')
+    deleteSS('ssAfter.png')
+    deleteSS('bluestackRoi.png')
 
 def circlesInArea():
     roiWidth = member_screen_coordinates["circle_search_area"]["w"]
