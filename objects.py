@@ -16,8 +16,8 @@ class PlayersStats:
     def __init__(self, playerId, playerName, highestPower, currentPower, merits, victories, defeats, unitsKilled, unitsDead, unitsHealed):
         self.playerId = playerId
         self.playerName = playerName
-        self.highestPower = highestPower
         self.currentPower = currentPower
+        self.highestPower = highestPower
         self.merits = merits
         self.victories = victories
         self.defeats = defeats
