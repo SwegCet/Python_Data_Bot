@@ -22,7 +22,7 @@ detailed_profile_screenshot_bound = {
 
 #Set boundaries for the player Id numbers
 player_screenshot_bound = {
-    "playerId": ImageBounds(Point(385,470), 130, 30)
+    "playerId": ImageBounds(Point(340,470), 130, 30)
 }
 
 #For Image Recognition
