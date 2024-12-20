@@ -1,5 +1,3 @@
-from difflib import SequenceMatcher
-
 import cv2
 import numpy as np
 import pytesseract
@@ -21,12 +19,6 @@ def collectPlayerStats(detailedProfilePath, profileSummaryPath):
     
     return PlayersStats(playerId, playerName, highestPower, currentPower, merits, victories, defeats, kills, dead, healed)
 
-#Most likely useless
-def stringSimilarity(string1, string2):
-    similarityRatio = SequenceMatcher(None, string1.lower(), string2.lower().ratio())
-    
-    return similarityRatio
-
 #Grabs player data from more Info page
 def getPlayerDetails(path):
     image = cv2.imread(path)
@@ -41,6 +33,8 @@ def getPlayerDetails(path):
     dead = readNumber(image, ss_detail_bounds["deads"])
     healed = readNumber(image, ss_detail_bounds["healed"])
     
+    ''' UNCOMMENT IF YOU'RE DEBUGGING
+    
     logging.info(f"Detail Name: {name}")
     logging.info(f"Current Power: {currentPower}")
     logging.info(f"Merits: {merits}")
@@ -50,6 +44,7 @@ def getPlayerDetails(path):
     logging.info(f"Kills: {kills}")
     logging.info(f"Dead: {dead}")
     logging.info(f"Healed: {healed}")
+    '''
     
     return name, currentPower, highestPower, merits, victories, defeats , kills, dead, healed
 
@@ -59,7 +54,7 @@ def getPlayerSummary(path):
     image = cv2.imread(path)
     playerId = readGrayNumber(image, ss_bounds["playerId"])
     
-    logging.error(f"Player Id: {playerId}")
+    #logging.error(f"Player Id: {playerId}")
     
     return playerId
 
@@ -89,10 +84,13 @@ def readNumber(image, bounds):
 
     #Formatting the number with commas
     try:
-        extractedNumber = int(cleanedNumbers.replace(',', ''))
+        if cleanedNumbers: #Check if string is nonempty
+            extractedNumber = int(cleanedNumbers.replace(',', ''))
+        else:
+            extractedNumber = 0 #Default to 0
     except ValueError:
-        extractedNumber = -1
-        logging.error("OCR result doesn't contain valid number")
+        extractedNumber = 0
+        #logging.error("OCR result doesn't contain valid number")
     
     return extractedNumber
 
@@ -133,10 +131,13 @@ def readText(image, bounds):
         #Preprocess image
         grayImage = cv2.cvtColor(croppedImage, cv2.COLOR_BGR2GRAY)
         
+        '''UNCOMMENT IF THE TEXT ISN'T BEING READ CORRECTLY
+        
         #Apply morphological operations to separate characters
         kernel = np.ones((2,2), np.uint8)
         dilatedImage = cv2.dilate(grayImage, kernel, iterations=1) #Possibly Remove
         erodedImage = cv2.erode(dilatedImage, kernel, iterations=1) #Possibly Remove
+        '''
         
         customConfig = r'--oem 3 --psm 6 -l eng'
         text = pytesseract.image_to_string(grayImage, config=customConfig)
@@ -145,5 +146,5 @@ def readText(image, bounds):
         text = text.replace('\n', ' ')
         return text
     except Exception as e:
-        logging.error(f"An error occurred during text extraction: {str(e)}")
+        #logging.error(f"An error occurred during text extraction: {str(e)}")
         return ""
