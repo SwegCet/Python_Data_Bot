@@ -22,13 +22,13 @@ def getLeaderScreenshot(directory_path):
     cell_position = member_screen_coordinates["leader_location"]
     moveClickTarget(cell_position)
     findImageClick("./rss/infoButton.png")
-    time.sleep(1)
-    
+    time.sleep(1.5)
     saveProfile(new_path)
     
     moveClickTarget(member_screen_coordinates["more_info_location"])
     time.sleep(2)
     saveDetailedProfile(new_path)
+    
     moveClickTarget(member_screen_coordinates["back_button_location"])
     moveClickTarget(member_screen_coordinates["back_button_location"])
 
@@ -49,7 +49,7 @@ def processRanks(directory_path):
             
             drag(
                 Point(member_screen_coordinates["start_cell"].x, member_screen_coordinates["start_cell"].y), 
-                Point(member_screen_coordinates["start_cell"].x, member_screen_coordinates["start_cell"].y - 380), 0.5 #add -400 here when done with testing
+                Point(member_screen_coordinates["start_cell"].x, member_screen_coordinates["start_cell"].y - 350), 0.7 #add -400 here when done with testing
                 )
             time.sleep(0.5)
             
@@ -70,8 +70,8 @@ def circlesInArea():
     roiHeight = member_screen_coordinates["circle_search_area"]["h"]
     
     #Defining the radius for circle detection
-    min_Radius = member_screen_coordinates["circle_properties"]["min_radius"]
-    max_Radius = member_screen_coordinates["circle_properties"]["max_radius"]
+    minRadius = member_screen_coordinates["circle_properties"]["min_radius"]
+    maxRadius = member_screen_coordinates["circle_properties"]["max_radius"]
     roiX = member_screen_coordinates["circle_search_area"]["x"]
     roiY = member_screen_coordinates["circle_search_area"]["y"]
     
@@ -84,7 +84,7 @@ def circlesInArea():
     bluestack_image = cv2.medianBlur(bluestack_image, 5) # Applying median blur for noise reduction
     
     #Perform Hough Circle Transform for circle detection within the ROI
-    circles = cv2.HoughCircles(bluestack_image, cv2.HOUGH_GRADIENT, dp=1, minDist= 50, param1 = 50, param2 = 25, minRadius = min_Radius, maxRadius = max_Radius)
+    circles = cv2.HoughCircles(bluestack_image, cv2.HOUGH_GRADIENT, dp=1, minDist= 50, param1 = 50, param2 = 25, minRadius = minRadius, maxRadius = maxRadius)
     
     return circles
 
@@ -127,25 +127,25 @@ def findImageClick(reference_image_path, should_click=True, retry_count = 3, thr
         
         #perform template matching
         result = cv2.matchTemplate(screenshot, template, cv2.TM_CCOEFF_NORMED)
-        min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
+        min_val, maxval, min_loc, maxloc = cv2.minMaxLoc(result)
          # Check if a valid match is found based on the threshold
-        if max_val >= threshold:
+        if maxval >= threshold:
             # Get the coordinates of the top-left corner of the best match
-            top_left = max_loc
+            top_left = maxloc
 
             # Calculate the center of the reference image
             h, w = template.shape[:2]
-            center_x = top_left[0] + w // 2
-            center_y = top_left[1] + h // 2
+            centerx = top_left[0] + w // 2
+            centery = top_left[1] + h // 2
 
             # Simulate a click at the center of the reference image
             if should_click:
-                pyautogui.click(center_x, center_y)
+                pyautogui.click(centerx, centery)
                 time.sleep(.5)
             return True
         else:
             logging.info(
-                f"No valid match found with confidence level below the threshold. Value: {max_val}, Threshold: {threshold}, Image:{reference_image_path},Count: {i}")
+                f"No valid match found with confidence level below the threshold. Value: {maxval}, Threshold: {threshold}, Image:{reference_image_path},Count: {i}")
             time.sleep(.5)
 
     return False
@@ -180,7 +180,8 @@ def areScreenshotsSame(beforepath, afterpath):
     ssiScore, _ = ssim(grayBefore, grayAfter, full = True)
     
     #Compare SSI score to determine if images are same
-    threshold = 0.92
+    threshold = 0.93 # Do test runs for threshold values, might be different for everyone
+    
     print(f"The SSI score was: {ssiScore}")
     if ssiScore > threshold:
         return True
