@@ -3,7 +3,6 @@ import os
 import shutil
 import time
 from datetime import datetime
-import tkinter as tk #remove
 import pytz
 
 from parser import collectPlayerStats
@@ -44,7 +43,9 @@ def parseScreenshots(directoryName, destinationDirectoryName):
         
         print(f"Skipped {skipCount} players")
         print(f"Total unique players: {len(results)}")
+        
         zipFolder(os.path.join(destinationDirectoryName, "ss"), os.path.join(destinationDirectoryName,"ss.zip"))
+        
         #recursively remove the directory and its contents
         shutil.rmtree(os.path.join(destinationDirectoryName, "ss"))
         return results, destinationDirectoryName.replace("outputs/", "")
@@ -82,7 +83,7 @@ def main():
     results, destination_directory_name = parseScreenshots(os.path.join(directoryName), result_path)
     destination_directory_names.append(destination_directory_name)
     print(f"Parsed {len(results)} screenshots")
-    savePlayerStats(results.values(), os.path.join(result_path,"player_statistics"))
+    savePlayerStats(results.values(), os.path.join(result_path,"player_statistics")) #Change the player_statistics depending on event
     # ----------------------------- Parse Screenshots -----------------------------
     
     
@@ -94,12 +95,11 @@ def main():
     for directory in allDirectories:
         if directory != 'result':
             directory_path = os.path.join(directoryName, directory)
-            print(f"Deleting directory: {directory_path}")
+            #print(f"Deleting directory: {directory_path}")
             shutil.rmtree(directory_path)
     # ----------------------------- Clear Directories -----------------------------
     
     moveClickTarget(member_screen_coordinates["back_button_location"])
-    moveClickTarget(member_screen_coordinates["back_button_location"]) # Possibly Remove
     time.sleep(1)
 
     # Here is where putting files into googledrive will be 
