@@ -5,8 +5,8 @@ from objects import Point, ImageBounds
 
 #Set boundaries for player stats and name, Highlights the NUMBERS for stats and NAME for player ONLY
 #Format for coordiante is: ImageBounds(Point(X,Y), Xoffset, Yoffset) <- THIS CREATES A RECTANGLE "BOX" 
-#Higher values of X offset = move right
-#Higher values of Y offset = move down
+#Positive values of X offset = move right
+#Positive values of Y offset = move down
 
 detailed_profile_screenshot_bound = {
     "name": ImageBounds(Point(190, 690), 280, 50),
@@ -22,7 +22,7 @@ detailed_profile_screenshot_bound = {
 
 #Set boundaries for the player Id numbers
 player_screenshot_bound = {
-    "playerId": ImageBounds(Point(340,470), 130, 30)
+    "playerId": ImageBounds(Point(330,470), 140, 30)
 }
 
 #For Image Recognition
@@ -32,11 +32,11 @@ member_screen_coordinates = {
     "leader_location": Point(830, 385), # Where the leader is
     "circle_search_area": { # Rectangular Area starting from top left of R4 tab rectangle to bottom Right of Members
         "x":730,
-        "y":550,
+        "y":540,
         "w":1100, #730 + 1100
-        "h": 410, #290 + 670
+        "h": 420, #540 + 420
     },
-    "start_cell": Point(1275, 785), # Starts at the gap between members (empty space)
+    "start_cell": Point(1280, 900), # Starts at the gap between members (empty space)
     "circle_properties": {
         "min_radius": 35,
         "max_radius": 55,
